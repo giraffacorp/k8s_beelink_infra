@@ -3,9 +3,9 @@
 version: "3"
 
 vars:
-  TALHELPER_CLUSTER_DIR: "{{.BOOTSTRAP_DIR}}/clusterconfig"
-  TALHELPER_CONFIG_FILE: "{{.BOOTSTRAP_DIR}}/talconfig.yaml"
-  TALHELPER_SECRET_FILE: "{{.BOOTSTRAP_DIR}}/talsecret.sops.yaml"
+  TALHELPER_CLUSTER_DIR: "{{.BOOTSTRAP_DIR}}/talos/clusterconfig"
+  TALHELPER_CONFIG_FILE: "{{.BOOTSTRAP_DIR}}/talos/talconfig.yaml"
+  TALHELPER_SECRET_FILE: "{{.BOOTSTRAP_DIR}}/talos/talsecret.sops.yaml"
   TALHELPER_PATCHES_DIR: "{{.BOOTSTRAP_DIR}}/talos/patches"
   GITHUB_PAT_FILE: "{{.BOOTSTRAP_DIR}}/argocd/github-pat.sops.yaml"
 
@@ -111,7 +111,7 @@ tasks:
         cilium install  --set ipam.mode=kubernetes  --set kubeProxyReplacement=true  --set securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" 
         --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}"  --set
         cgroup.autoMount.enabled=false  --set cgroup.hostRoot=/sys/fs/cgroup  --set k8sServiceHost=localhost 
-        --set k8sServicePort=7445  --set socketLB.hostNamespaceOnly=true  --set cni.exclusive=false
+        --set k8sServicePort=7445  --set socketLB.hostNamespaceOnly=true
       - cilium status --wait
     preconditions:
       - test -f {{.KUBECONFIG}}

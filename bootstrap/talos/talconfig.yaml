@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+talosVersion: v1.10.2
+kubernetesVersion: v1.33.0
+clusterName: maddin-cluster
+endpoint: https://192.168.10.10:6443
+allowSchedulingOnControlPlanes: true
+# --------------------------------------------
+# certificates
+# --------------------------------------------
+additionalMachineCertSans:
+  - 100.120.77.11
+  - 100.120.77.12
+  - 100.120.77.13
+#
+additionalApiServerCertSans:
+  - 100.120.77.11
+  - 100.120.77.12
+  - 100.120.77.13
+# --------------------------------------------
+# nodes
+# --------------------------------------------
+nodes:
+  - hostname: BL14-1
+    ipAddress: 192.168.10.11
+    controlPlane: true
+    installDiskSelector:
+      model: CT1000P3PSSD8
+  - hostname: BL14-2
+    ipAddress: 192.168.10.12
+    controlPlane: true
+    installDiskSelector:
+      model: CT1000P3PSSD8
+  - hostname: BL14-3
+    ipAddress: 192.168.10.13
+    controlPlane: true
+    installDiskSelector:
+      model: CT1000P3PSSD8
+# --------------------------------------------
+# controlplane overwrites
+# --------------------------------------------
+controlPlane:
+  schematic:
+    customization:
+      extraKernelArgs:
+        - net.ifnames=0
+        - i915.enable_guc=3
+        - intel_iommu=on
+        - iommu=pt
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/intel-ucode
+          - siderolabs/i915
+          - siderolabs/mei
+          - siderolabs/tailscale
+          - siderolabs/iscsi-tools
+# --------------------------------------------
+# patches
+# --------------------------------------------
+patches:
+  - "@./patches/cni.yaml"
+  - "@./patches/node-ip.yaml"
+  - "@./patches/etcdsubnets.yaml"
+  - "@./patches/virtual-ip.yaml"
+  - "@./patches/metrics-server.yaml"
+  - "@./patches/metrics-scraping.yaml"
