@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+set: [pipefail]
+shopt: [globstar]
+
+vars:
+  BOOTSTRAP_DIR: "{{.ROOT_DIR}}/bootstrap"
+
+env:
+  KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
+
+includes:
+  local: .taskfiles/local
+  talos: .taskfiles/talos
+
+tasks:
+  default: task --list

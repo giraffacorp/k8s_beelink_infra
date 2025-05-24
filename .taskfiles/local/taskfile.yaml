@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+tasks:
+  setup:
+    desc: Set up everything
+    deps: [deps, direnv, sops-differ, precommit]
+    cmds:
+      - task: deps
+      - task: direnv
+      - task: precommit
+      - task: sops-differ
+
+  deps:
+    desc: Set up Homebrew tools
+    cmd: brew bundle --file {{.ROOT_DIR}}/.taskfiles/local/Brewfile
+    sources:
+      - "{{.ROOT_DIR}}/.taskfiles/local/Brewfile"
+    generates:
+      - "{{.ROOT_DIR}}/.taskfiles/local/Brewfile.lock.json"
+    preconditions:
+      - test -f {{.ROOT_DIR}}/.taskfiles/local/Brewfile
+      - which brew
+
+  direnv:
+    desc: Set up direnv hooks
+    cmd: direnv allow .
+    status:
+      - '[[ $(direnv status --json | jq ".state.foundRC.allowed") == 0 ]]'
+      - '[[ $(direnv status --json | jq ".state.loadedRC.allowed") == 0 ]]'
+    preconditions:
+      - which direnv
+
+  sops-differ:
+    desc: git diff sops files
+    status:
+      - git config --local --get diff.sopsdiffer.textconv | grep -q "sops decrypt"
+    cmds:
+      - git config --local diff.sopsdiffer.textconv "sops decrypt"
+    preconditions:
+      - which git
+
+  precommit:
+    desc: Set up pre-commit hooks
+    cmd: uvx pre-commit install
+    generates:
+      - "{{.ROOT_DIR}}/.git/hooks/pre-commit"
+    preconditions:
+      - which uvx
