@@ -1,0 +1,21 @@
+creation_rules:
+  # tailscale secret
+  - path_regex: talos/.*tailscale\.sops\.yaml
+    encrypted_regex: ^environment$
+    key_groups:
+      - age:
+          - age1haxzj5xhxtpag457wwykd4alk7x0cfdzc0gcfgltlvuh7zfywveqz53gjl
+  # talos secrets
+  - path_regex: talos/.+\.sops\.yaml
+    key_groups:
+      - age:
+          - age1haxzj5xhxtpag457wwykd4alk7x0cfdzc0gcfgltlvuh7zfywveqz53gjl
+  # kubernetes secrets
+  - path_regex: kubernetes/.+\.sops\.yaml
+    encrypted_regex: ^(data|stringData)$
+    key_groups:
+      - age:
+          - age1haxzj5xhxtpag457wwykd4alk7x0cfdzc0gcfgltlvuh7zfywveqz53gjl
+stores:
+  yaml:
+    indent: 2
