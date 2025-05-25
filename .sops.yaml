@@ -12,7 +12,7 @@ creation_rules:
       - age:
           - age1haxzj5xhxtpag457wwykd4alk7x0cfdzc0gcfgltlvuh7zfywveqz53gjl
   # kubernetes secrets
-  - path_regex: argocd/.+\.sops\.yaml
+  - path_regex: apps/.+\.sops\.yaml
     encrypted_regex: ^(data|stringData)$
     key_groups:
       - age:
