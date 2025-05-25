@@ -97,6 +97,7 @@ tasks:
 
       - task: cilium
       - talosctl health --server=false
+      - task: argocd
     preconditions:
       - test -f {{.SOPS_CONFIG_FILE}}
       - test -f {{.SOPS_AGE_KEY_FILE}}
@@ -104,6 +105,7 @@ tasks:
       - test -f {{.TALHELPER_SECRET_FILE}}
       - test -f {{.TALHELPER_PATCHES_DIR}}/tailscale.sops.yaml
       - which talhelper
+
   cilium:
     internal: true
     cmds:
@@ -116,3 +118,14 @@ tasks:
     preconditions:
       - test -f {{.KUBECONFIG}}
       - which cilium
+
+  argocd:
+    internal: true
+    cmds:
+      - kubectl create namespace argocd
+      - kubectl create namespace sops-operator
+      - kubectl annotate namespace/sops-operator argocd.argoproj.io/managed-by=argocd
+      - kubectl create secret generic -n sops-operator sops-age-key --from-file={{.SOPS_AGE_KEY_FILE}}
+      - kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/refs/tags/v3.0.3/manifests/ha/install.yaml
+    preconditions:
+      - test -f {{.KUBECONFIG}}
