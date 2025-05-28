@@ -36,3 +36,41 @@ spec:
     managedNamespaceMetadata:
       labels:
         pod-security.kubernetes.io/enforce: privileged
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  sources:
+    - repoURL: https://charts.rook.io/release
+      chart: rook-ceph-cluster
+      targetRevision: v1.17.2
+      helm:
+        valueFiles:
+          - $app/apps/rook-ceph/values-cluster.yaml
+    - repoURL: https://github.com/giraffacorp/k8s_beelink_x3_infra.git
+      targetRevision: HEAD
+      ref: app
+      path: apps/rook-ceph
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rook-ceph
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        maxDuration: 3m
+        factor: 2
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
