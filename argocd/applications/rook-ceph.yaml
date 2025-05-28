@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rook-ceph
+  name: rook-ceph-operator
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
@@ -40,7 +40,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rook-ceph
+  name: rook-ceph-cluster
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
