@@ -14,7 +14,7 @@ spec:
       helm:
         valueFiles:
           - $app/apps/cert-manager/values.yaml
-    - repoURL: https://github.com/giraffacorp/k8s_beelink_x3_infra.git
+    - repoURL: https://github.com/giraffacorp/k8s_beelink_infra.git
       targetRevision: HEAD
       ref: app
       path: apps/cert-manager
