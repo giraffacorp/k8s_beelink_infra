@@ -3,8 +3,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   sources:
@@ -18,8 +16,6 @@ spec:
       targetRevision: HEAD
       ref: app
       path: apps/traefik
-      directory:
-        recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: traefik
