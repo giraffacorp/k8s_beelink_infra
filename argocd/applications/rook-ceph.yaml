@@ -10,7 +10,7 @@ spec:
   sources:
     - repoURL: https://charts.rook.io/release
       chart: rook-ceph
-      targetRevision: v1.17.3
+      targetRevision: v1.17.4
       helm:
         valueFiles:
           - $app/apps/rook-ceph/values-operator.yaml
