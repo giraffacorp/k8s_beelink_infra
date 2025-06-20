@@ -50,7 +50,7 @@ spec:
   sources:
     - repoURL: https://charts.rook.io/release
       chart: rook-ceph-cluster
-      targetRevision: v1.17.4
+      targetRevision: v1.17.5
       helm:
         valueFiles:
           - $app/apps/rook-ceph/values-cluster.yaml
