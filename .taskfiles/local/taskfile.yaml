@@ -4,7 +4,11 @@ version: "3"
 tasks:
   setup:
     desc: Set up everything
-    deps: [deps, direnv, sops-differ, precommit]
+    deps:
+      - deps
+      - direnv
+      - sops-differ
+      - precommit
     cmds:
       - task: deps
       - task: direnv
