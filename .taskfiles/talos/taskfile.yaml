@@ -38,7 +38,8 @@ tasks:
         sh: yq '.clusterName' {{.TALHELPER_CONFIG_FILE}}
       MODE: '{{.MODE | default "auto"}}'
     requires:
-      vars: [HOSTNAME]
+      vars:
+        - HOSTNAME
     preconditions:
       - talosctl config info &>/dev/null
       - test -f {{.TALHELPER_CLUSTER_DIR}}/{{.CLUSTER_NAME}}-{{.HOSTNAME}}.yaml
@@ -58,7 +59,8 @@ tasks:
         sh: yq '.clusterName' {{.TALHELPER_CONFIG_FILE}}
       MODE: '{{.MODE | default "auto"}}'
     requires:
-      vars: [HOSTNAME]
+      vars:
+        - HOSTNAME
     preconditions:
       - talosctl config info &>/dev/null
       - test -f {{.TALHELPER_CLUSTER_DIR}}/{{.CLUSTER_NAME}}-{{.HOSTNAME}}.yaml
