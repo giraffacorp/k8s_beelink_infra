@@ -2,7 +2,7 @@
 repos:
   # yaml formatting
   - repo: https://github.com/google/yamlfmt
-    rev: v0.17.1
+    rev: v0.17.2
     hooks:
       - id: yamlfmt
         args:
