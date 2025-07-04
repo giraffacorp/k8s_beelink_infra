@@ -96,9 +96,9 @@ tasks:
         --extra-flags="{{.ROOT_DIR}} --force"  | bash; do sleep 10; done
       - >
         until kubectl wait  --for=condition=Ready=False nodes  --all  --timeout=600s;  do sleep 10; done
-
       - task: cilium
       - talosctl health --server=false
+      - task: prometheus
       - task: argocd
     preconditions:
       - test -f {{.SOPS_CONFIG_FILE}}
@@ -107,6 +107,16 @@ tasks:
       - test -f {{.TALHELPER_SECRET_FILE}}
       - test -f {{.TALHELPER_PATCHES_DIR}}/tailscale.sops.yaml
       - which talhelper
+
+  prometheus:
+    internal: true
+    cmds:
+      - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      - helm repo update
+      - helm install prometheus-operator-crds prometheus-community/prometheus-operator-crds
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which helm
 
   cilium:
     internal: true
