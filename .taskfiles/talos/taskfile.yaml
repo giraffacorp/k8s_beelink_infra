@@ -6,6 +6,7 @@ vars:
   TALHELPER_CLUSTER_DIR: "{{.BOOTSTRAP_DIR}}/talos/clusterconfig"
   TALHELPER_CONFIG_FILE: "{{.BOOTSTRAP_DIR}}/talos/talconfig.yaml"
   TALHELPER_SECRET_FILE: "{{.BOOTSTRAP_DIR}}/talos/talsecret.sops.yaml"
+  TALHELPER_ENV_FILE: "{{.BOOTSTRAP_DIR}}/talos/talenv.sops.yaml"
   TALHELPER_PATCHES_DIR: "{{.BOOTSTRAP_DIR}}/talos/patches"
   GITHUB_PAT_FILE: "{{.BOOTSTRAP_DIR}}/argocd/github-pat.sops.yaml"
 
@@ -16,8 +17,8 @@ tasks:
   generate-config:
     desc: Generate Talos configuration
     cmd: >
-      talhelper genconfig   --config-file {{.TALHELPER_CONFIG_FILE}}   --secret-file {{.TALHELPER_SECRET_FILE}}  
-      --out-dir {{.TALHELPER_CLUSTER_DIR}}
+      talhelper genconfig  --config-file {{.TALHELPER_CONFIG_FILE}} --secret-file {{.TALHELPER_SECRET_FILE}}
+      --env-file {{.TALHELPER_ENV_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}}
     preconditions:
       - test -f {{.TALHELPER_CONFIG_FILE}}
       - test -f {{.SOPS_CONFIG_FILE}}
@@ -29,9 +30,8 @@ tasks:
     cmds:
       - task: generate-config
       - >
-        talhelper gencommand apply   --node {{.HOSTNAME}}  --config-file {{.TALHELPER_CONFIG_FILE}}  
-        --out-dir {{.TALHELPER_CLUSTER_DIR}}   --extra-flags="--insecure -p @{{.TALHELPER_PATCHES_DIR}}/tailscale.sops.yaml" 
-        | bash
+        talhelper gencommand apply   --node {{.HOSTNAME}}  --config-file {{.TALHELPER_CONFIG_FILE}}  --env-file
+        {{.TALHELPER_ENV_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}} | bash
       - talosctl --nodes {{.HOSTNAME}} health --wait-timeout=10m --server=false
     vars:
       CLUSTER_NAME:
@@ -51,8 +51,8 @@ tasks:
     cmds:
       - task: generate-config
       - >
-        talhelper gencommand upgrade  --node {{.HOSTNAME}}  --config-file {{.TALHELPER_CONFIG_FILE}}  
-        --out-dir {{.TALHELPER_CLUSTER_DIR}}  | bash
+        talhelper gencommand upgrade  --node {{.HOSTNAME}}  --config-file {{.TALHELPER_CONFIG_FILE}} 
+        --env-file {{.TALHELPER_ENV_FILE}} --out-dir {{.TALHELPER_CLUSTER_DIR}}  | bash
       - talosctl health --server=false
     vars:
       CLUSTER_NAME:
@@ -82,12 +82,11 @@ tasks:
     desc: Bootstrap the Talos cluster
     cmds:
       - >
-        talhelper genconfig   --config-file {{.TALHELPER_CONFIG_FILE}}   --secret-file {{.TALHELPER_SECRET_FILE}}  
-        --out-dir {{.TALHELPER_CLUSTER_DIR}}
+        talhelper genconfig   --config-file {{.TALHELPER_CONFIG_FILE}}  --env-file {{.TALHELPER_ENV_FILE}} 
+        --secret-file {{.TALHELPER_SECRET_FILE}}   --out-dir {{.TALHELPER_CLUSTER_DIR}}
       - >
-        sops exec-file --no-fifo  --filename patch.yaml {{.TALHELPER_PATCHES_DIR}}/tailscale.sops.yaml 
-        "talhelper gencommand apply  --config-file {{.TALHELPER_CONFIG_FILE}}  --out-dir {{.TALHELPER_CLUSTER_DIR}} 
-        --extra-flags='--insecure'  --extra-flags='-p @{}' | bash"
+        talhelper gencommand apply  --config-file {{.TALHELPER_CONFIG_FILE}} --env-file {{.TALHELPER_ENV_FILE}}
+        --out-dir {{.TALHELPER_CLUSTER_DIR}}  --extra-flags='--insecure'  --extra-flags='-p @{}' | bash
       - >
         until talhelper gencommand bootstrap   --config-file {{.TALHELPER_CONFIG_FILE}}   --out-dir {{.TALHELPER_CLUSTER_DIR}} 
         | bash; do sleep 10; done
@@ -125,7 +124,7 @@ tasks:
         cilium install  --set ipam.mode=kubernetes  --set kubeProxyReplacement=true  --set securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" 
         --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}"  --set
         cgroup.autoMount.enabled=false  --set cgroup.hostRoot=/sys/fs/cgroup  --set k8sServiceHost=localhost 
-        --set k8sServicePort=7445  --set socketLB.hostNamespaceOnly=true
+        --set k8sServicePort=7445 --set l2announcements.enabled=true
       - cilium status --wait
     preconditions:
       - test -f {{.KUBECONFIG}}
