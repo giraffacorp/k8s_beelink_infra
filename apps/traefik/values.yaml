@@ -11,6 +11,8 @@ service:
 ingressRoute:
   dashboard:
     enabled: true
+    entryPoints:
+      - "web"
 
 ports:
   web:
