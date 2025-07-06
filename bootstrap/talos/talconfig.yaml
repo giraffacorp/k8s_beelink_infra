@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
-talosVersion: v1.10.2
+talosVersion: v1.10.5
 kubernetesVersion: v1.33.0
 clusterName: maddin-cluster
 endpoint: https://192.168.10.10:6443
@@ -12,7 +12,6 @@ additionalMachineCertSans:
   - 100.120.77.11
   - 100.120.77.12
   - 100.120.77.13
-#
 additionalApiServerCertSans:
   - 100.120.77.11
   - 100.120.77.12
@@ -53,7 +52,7 @@ controlPlane:
           - siderolabs/i915
           - siderolabs/mei
           - siderolabs/tailscale
-          - siderolabs/iscsi-tools
+          - siderolabs/cloudflared
 # --------------------------------------------
 # patches
 # --------------------------------------------
@@ -64,3 +63,5 @@ patches:
   - "@./patches/virtual-ip.yaml"
   - "@./patches/metrics-server.yaml"
   - "@./patches/metrics-scraping.yaml"
+  - "@./patches/tailscale.yaml"
+  - "@./patches/cloudflared.yaml"

@@ -1,0 +1,8 @@
+---
+apiVersion: v1alpha1
+kind: ExtensionServiceConfig
+name: cloudflared
+environment:
+  - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+  - TUNNEL_METRICS=localhost:2000
+  - TUNNEL_EDGE_IP_VERSION=auto
