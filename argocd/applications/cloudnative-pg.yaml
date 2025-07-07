@@ -16,6 +16,12 @@ spec:
       targetRevision: HEAD
       ref: app
       path: apps/cloudnative-pg
+    - repoURL: https://github.com/cloudnative-pg/plugin-barman-cloud
+      targetRevision: v0.5.0
+      path: .
+      directory:
+        recurse: false
+        include: manifest.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: cnpg-system
