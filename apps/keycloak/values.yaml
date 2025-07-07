@@ -12,8 +12,14 @@ postgresql:
 ingress:
   enabled: false
 proxy: edge
+proxyHeaders: xforwarded
 production: true
 replicaCount: 3
+extraEnvVars:
+  - name: KC_HOSTNAME
+    value: https://auth.maddin.dev
+  - name: KC_HOSTNAME_ADMIN
+    value: https://keycloak.maddin.dev
 
 resources:
   requests:
