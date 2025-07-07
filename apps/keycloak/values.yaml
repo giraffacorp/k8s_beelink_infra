@@ -1,0 +1,24 @@
+---
+externalDatabase:
+  existingSecret: keycloak-db-app
+  existingSecretHostKey: "host"
+  existingSecretPortKey: "port"
+  existingSecretUserKey: "username"
+  existingSecretDatabaseKey: "dbname"
+  existingSecretPasswordKey: "password"
+
+postgresql:
+  enabled: false
+ingress:
+  enabled: false
+proxy: edge
+production: true
+replicaCount: 3
+
+resources:
+  requests:
+    memory: "1250Mi"
+    cpu: "500m"
+  limits:
+    memory: "1500Mi"
+    cpu: "1000m"
