@@ -51,6 +51,7 @@ controlPlane:
           - siderolabs/intel-ucode
           - siderolabs/i915
           - siderolabs/mei
+          - siderolabs/iscsi-tools
           - siderolabs/tailscale
           - siderolabs/cloudflared
 # --------------------------------------------
