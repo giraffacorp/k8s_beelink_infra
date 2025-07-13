@@ -3,6 +3,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: synology-csi
+  labels:
+    app-type: infra
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:

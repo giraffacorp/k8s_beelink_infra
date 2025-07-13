@@ -3,6 +3,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: rook-ceph-operator
+  labels:
+    app-type: infra
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
@@ -43,6 +45,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: rook-ceph-cluster
+  labels:
+    app-type: infra
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
