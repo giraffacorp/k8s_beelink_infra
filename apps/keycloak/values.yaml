@@ -1,17 +1,16 @@
 ---
 externalDatabase:
+  host: keycloak-db-rw
+  port: 5432
+  database: app
   existingSecret: keycloak-db-app
-  existingSecretHostKey: "host"
-  existingSecretPortKey: "port"
   existingSecretUserKey: "username"
-  existingSecretDatabaseKey: "dbname"
   existingSecretPasswordKey: "password"
 
 postgresql:
   enabled: false
 ingress:
   enabled: false
-proxy: edge
 proxyHeaders: xforwarded
 production: true
 replicaCount: 3
@@ -20,6 +19,8 @@ extraEnvVars:
     value: https://auth.maddin.dev
   - name: KC_HOSTNAME_ADMIN
     value: https://keycloak.maddin.dev
+  - name: KC_HTTP_ENABLED
+    value: "true"
 
 resources:
   requests:
