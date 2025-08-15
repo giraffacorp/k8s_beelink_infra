@@ -16,9 +16,8 @@ This repository contains the core infrastructure components for my Kubernetes cl
 ```
 ├── .taskfiles/                 # Custom Taskfile scripts modules
 ├── apps/                       # Core application configurations
-├── argocd/                     # ArgoCD definitions
-│   ├── app-of-apps.yaml
-│   └── applications/
+├── argocd/                     # ArgoCD applicationsets
+│   └── appsets/
 ├── bootstrap/                  # Cluster bootstrapping configs
 │   └── talos/
 │       ├── talconfig.yaml
